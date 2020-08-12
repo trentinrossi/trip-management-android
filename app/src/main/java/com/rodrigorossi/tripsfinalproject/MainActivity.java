@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private TripAdapter tripAdapter;
     private ArrayList<Trip> trips = new ArrayList<>();
+    private Trip tripSelected;
+    private int positionSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +51,15 @@ public class MainActivity extends AppCompatActivity {
                 new RecyclerItemClickListener(getApplicationContext(), recyclerViewTrips, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Trip t = trips.get(position);
-                        Toast.makeText(getApplicationContext(), t.getDestiny(), Toast.LENGTH_SHORT).show();
+                        tripSelected = trips.get(position);
+                        positionSelected = position;
+                        Toast.makeText(getApplicationContext(), tripSelected.getDestiny(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onLongItemClick(View view, int position) {
-                        Trip t = trips.get(position);
+                        tripSelected = trips.get(position);
+                        positionSelected = position;
                         view.startActionMode(mActionModeCallback);
                     }
                 }));
@@ -133,12 +137,19 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.lblYes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // TODO Implementar um método de exclusão da viagem da lista
+                deleteItem();
             }
         });
         builder.setNegativeButton(R.string.lblCancel,null);
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void deleteItem() {
+        trips.remove(positionSelected);
+//        recyclerViewTrips.removeViewAt(positionSelected);
+        tripAdapter.notifyDataSetChanged();
     }
 
     private void createFakeTripsList() {
