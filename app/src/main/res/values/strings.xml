@@ -25,4 +25,6 @@
     <string name="lblVehicleType">Vehicle Type</string>
     <string name="lblRefound">Refound</string>
     <string name="lblSave">Save</string>
+    <string name="lblNewTrip">New Trip</string>
+    <string name="lblUpdateTrip">Update Trip</string>
 </resources>

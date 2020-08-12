@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.rodrigorossi.tripsfinalproject.adapter.TripAdapter;
+import com.rodrigorossi.tripsfinalproject.model.ActivityOpenMode;
 import com.rodrigorossi.tripsfinalproject.model.Trip;
 import com.rodrigorossi.tripsfinalproject.util.RecyclerItemClickListener;
 
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewTrips.setHasFixedSize(true);
         recyclerViewTrips.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
 
-        addTripOnList();
+        createFakeTripsList();
 
         recyclerViewTrips.addOnItemTouchListener(
                 new RecyclerItemClickListener(getApplicationContext(), recyclerViewTrips, new RecyclerItemClickListener.OnItemClickListener() {
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.menuContextEdit:
-                    startActivityTrip(menuItem);
+                    startActivityTrip(menuItem, ActivityOpenMode.UPDATE);
                     actionMode.finish();
                     return true;
                 case R.id.menuContextDelete:
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivityAbout(item);
                 return true;
             case R.id.menuItemNew:
-                startActivityTrip(item);
+                startActivityTrip(item, ActivityOpenMode.NEW);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -119,8 +120,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void startActivityTrip(MenuItem item) {
+    private void startActivityTrip(MenuItem item, ActivityOpenMode openMode) {
         Intent intent = new Intent(this, TripActivity.class);
+        intent.putExtra("MODE", openMode);
         startActivity(intent);
     }
 
@@ -139,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void addTripOnList() {
+    private void createFakeTripsList() {
         trips.add(new Trip(1, "Foz"));
         trips.add(new Trip(2, "Cascavel"));
         trips.add(new Trip(3, "Toledo"));
