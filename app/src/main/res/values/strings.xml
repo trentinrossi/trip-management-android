@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Trip Management</string>
+    <string name="lblAppDescription">This app is awesome and you can control yours expensives during you trip! Enjoy!!</string>
+    <string name="lblStudentName">Student name</string>
+    <string name="lblCourseName">Course name</string>
+    <string name="lblStudentEmail">Student e-mail</string>
+    <string name="lblRodrigoTrentinRossi">RODRIGO TRENTIN ROSSI</string>
+    <string name="lblJavaTechnologySpecialization">Java Technology Specialization</string>
+    <string name="lblRodrigorossiemail">rodrigo.rossi@fullcustom.com.br</string>
+    <string name="lblAbout">About</string>
+    <string name="lblNew">New Trip</string>
+    <string name="lblEdit">Edit</string>
+    <string name="lblDelete">Delete</string>
+    <string name="lblAreYouSure">Are you sure?</string>
+    <string name="lblConfirmation">Confirmation</string>
+    <string name="lblYes">Yes</string>
+    <string name="lblCancel">Cancel</string>
+    <string name="lblDestiny">Destiny</string>
+    <string name="lblInitialMileage">Initial Mileage</string>
+    <string name="lblFinalMileage">Final Mileage</string>
+    <string name="lblTripType">Trip Type</string>
+    <string name="lblWork">Work</string>
+    <string name="lblPrivate">Private</string>
+    <string name="lblLeisure">Leisure</string>
+    <string name="lblVehicleType">Vehicle Type</string>
+    <string name="lblRefound">Refound</string>
+    <string name="lblSave">Save</string>
+</resources>

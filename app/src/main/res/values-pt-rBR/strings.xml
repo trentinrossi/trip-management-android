@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Controle de Viagens</string>
+    <string name="lblAppDescription">App para controle e gerenciamento de suas viagens!</string>
+    <string name="lblCourseName">Nome do curso</string>
+    <string name="lblStudentEmail">E-mail do aluno</string>
+    <string name="lblStudentName">Nome do aluno</string>
+    <string name="lblRodrigoTrentinRossi">RODRIGO TRENTIN ROSSI</string>
+    <string name="lblJavaTechnologySpecialization">Especialização em Tecnologia Java</string>
+    <string name="lblRodrigorossiemail">rodrigo.rossi@fullcustom.com.br</string>
+    <string name="lblAbout">Sobre</string>
+    <string name="lblNew">Nova Viagem</string>
+    <string name="lblEdit">Editar</string>
+    <string name="lblDelete">Excluir</string>
+    <string name="lblAreYouSure">Tem certeza?</string>
+    <string name="lblConfirmation">Confirmação</string>
+    <string name="lblYes">Sim</string>
+    <string name="lblCancel">Cancelar</string>
+    <string name="lblDestiny">Destino</string>
+    <string name="lblInitialMileage">Quilometragem inicial</string>
+    <string name="lblFinalMileage">Quilometragem final</string>
+    <string name="lblTripType">Trip Type</string>
+    <string name="lblWork">Work</string>
+    <string name="lblPrivate">Private</string>
+    <string name="lblLeisure">Leisure</string>
+    <string name="lblVehicleType">Vehicle Type</string>
+    <string name="lblRefound">Refound</string>
+    <string name="lblSave">Save</string>
+</resources>
