@@ -27,4 +27,7 @@
     <string name="lblSave">Save</string>
     <string name="lblNewTrip">New Trip</string>
     <string name="lblUpdateTrip">Update Trip</string>
+    <string name="lblRental">Rental</string>
+    <string name="lblBorrowed">Borrowed</string>
+    <string name="lblUber">Uber</string>
 </resources>

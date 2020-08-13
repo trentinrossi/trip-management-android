@@ -1,12 +1,14 @@
 package com.rodrigorossi.tripsfinalproject;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -119,6 +121,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            Bundle bundle = data.getExtras();
+
+            tripSelected.setDestiny(bundle.getString(TripActivity.KEY_DESTINY));
+            tripSelected.setInitialMileage(bundle.getInt(TripActivity.KEY_INITIAL_MILEAGE));
+            tripSelected.setFinalMileage(bundle.getInt(TripActivity.KEY_FINAL_MILEAGE));
+            tripSelected.setTripType(bundle.getInt(TripActivity.KEY_TRIP_TYPE));
+            tripSelected.setVehicle(bundle.getInt(TripActivity.KEY_VEHICLE_TYPE));
+            tripSelected.setRefund(bundle.getBoolean(TripActivity.KEY_REFUND));
+
+            if (requestCode == ActivityOpenMode.NEW.getCode()) {
+                tripSelected.setId(bundle.getInt(TripActivity.KEY_ID));
+                addNewItem(tripSelected);
+            } else {
+                updateExistingItem();
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void startActivityAbout(MenuItem item) {
         Intent intent = new Intent(this, AboutActivity.class);
         startActivity(intent);
@@ -127,7 +152,14 @@ public class MainActivity extends AppCompatActivity {
     private void startActivityTrip(MenuItem item, ActivityOpenMode openMode) {
         Intent intent = new Intent(this, TripActivity.class);
         intent.putExtra("MODE", openMode);
-        startActivity(intent);
+        intent.putExtra(TripActivity.KEY_ID, trips.get(positionSelected).getId());
+        intent.putExtra(TripActivity.KEY_DESTINY, trips.get(positionSelected).getDestiny());
+        intent.putExtra(TripActivity.KEY_INITIAL_MILEAGE, trips.get(positionSelected).getInitialMileage());
+        intent.putExtra(TripActivity.KEY_FINAL_MILEAGE, trips.get(positionSelected).getFinalMileage());
+        intent.putExtra(TripActivity.KEY_TRIP_TYPE, trips.get(positionSelected).getTripType());
+        intent.putExtra(TripActivity.KEY_VEHICLE_TYPE, trips.get(positionSelected).getVehicle());
+        intent.putExtra(TripActivity.KEY_REFUND, trips.get(positionSelected).isRefund());
+        startActivityForResult(intent, openMode.getCode());
     }
 
     private void showConfirmDeleteDialog() {
@@ -136,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setPositiveButton(R.string.lblYes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // TODO Implementar um método de exclusão da viagem da lista
                 deleteItem();
             }
         });
@@ -152,13 +183,25 @@ public class MainActivity extends AppCompatActivity {
         tripAdapter.notifyDataSetChanged();
     }
 
+    private void addNewItem(Trip trip) {
+        trips.add(trip);
+        tripAdapter.notifyDataSetChanged();
+    }
+
+    private void updateExistingItem() {
+        trips.remove(positionSelected);
+        trips.add(positionSelected, tripSelected);
+        tripAdapter.notifyDataSetChanged();
+    }
+
     private void createFakeTripsList() {
-        trips.add(new Trip(1, "Foz"));
-        trips.add(new Trip(2, "Cascavel"));
-        trips.add(new Trip(3, "Toledo"));
-        trips.add(new Trip(4, "Guaíra"));
-        trips.add(new Trip(5, "Maringa"));
-        trips.add(new Trip(6, "Salto do Lontra"));
+        trips.add(new Trip(1, "Foz", 123123, 123123, R.id.radioWork, true, 1));
+        trips.add(new Trip(2, "Cascavel", 123123, 123123, R.id.radioLeisure, false, 0));
+        trips.add(new Trip(3, "Toledo", 123123, 123123, R.id.radioPrivate, true, 2));
+        trips.add(new Trip(4, "Guaíra", 123123, 123123, R.id.radioPrivate, true, 1));
+        trips.add(new Trip(5, "Marechal Candido Rondon", 123123, 123123, R.id.radioPrivate, true, 1));
+        trips.add(new Trip(6, "Curitiba", 123123, 123123, R.id.radioPrivate, false, 2));
+        trips.add(new Trip(7, "Blumenau", 123123, 123123, R.id.radioPrivate, true, 1));
 
         tripAdapter = new TripAdapter(trips);
         recyclerViewTrips.setAdapter(tripAdapter);

@@ -11,25 +11,20 @@ public class Trip {
     private int initialMileage;
     private int finalMileage;
     private int tripType;
-    private boolean refound;
+    private boolean refund;
     private int vehicle;
 
     public Trip() {
     }
 
-    public Trip(int id, String destiny, int initialMileage, int finalMileage, int tripType, boolean refound, int vehicle) {
+    public Trip(int id, String destiny, int initialMileage, int finalMileage, int tripType, boolean refund, int vehicle) {
         this.id = id;
         this.destiny = destiny;
         this.initialMileage = initialMileage;
         this.finalMileage = finalMileage;
         this.tripType = tripType;
-        this.refound = refound;
+        this.refund = refund;
         this.vehicle = vehicle;
-    }
-
-    public Trip(int id, String destiny) {
-        this.id = id;
-        this.destiny = destiny;
     }
 
     public int getId() {
@@ -72,12 +67,12 @@ public class Trip {
         this.tripType = tripType;
     }
 
-    public boolean isRefound() {
-        return refound;
+    public boolean isRefund() {
+        return refund;
     }
 
-    public void setRefound(boolean refound) {
-        this.refound = refound;
+    public void setRefund(boolean refund) {
+        this.refund = refund;
     }
 
     public int getVehicle() {
@@ -109,7 +104,7 @@ public class Trip {
                 ", initialMileage=" + initialMileage +
                 ", finalMileage=" + finalMileage +
                 ", tripType=" + tripType +
-                ", refound=" + refound +
+                ", refund=" + refund +
                 ", vehicle=" + vehicle +
                 '}';
     }

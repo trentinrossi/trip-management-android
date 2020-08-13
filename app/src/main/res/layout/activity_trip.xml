@@ -52,7 +52,7 @@
         android:autofillHints=""
         android:ems="10"
         android:inputType="number"
-        app:layout_constraintEnd_toStartOf="@+id/editTextNumber2"
+        app:layout_constraintEnd_toStartOf="@+id/editFinalMileage"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -69,7 +69,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editDestiny" />
 
     <EditText
-        android:id="@+id/editTextNumber2"
+        android:id="@+id/editFinalMileage"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -93,6 +93,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editInitialMileage" />
 
     <RadioGroup
+        android:id="@+id/radioGroupTripType"
         android:layout_width="157dp"
         android:layout_height="100dp"
         android:layout_marginTop="8dp"
@@ -127,8 +128,8 @@
         android:text="@string/lblVehicleType"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/editTextNumber2"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumber2" />
+        app:layout_constraintStart_toStartOf="@+id/editFinalMileage"
+        app:layout_constraintTop_toBottomOf="@+id/editFinalMileage" />
 
     <Spinner
         android:id="@+id/spinnerVehicleType"
@@ -136,8 +137,9 @@
         android:layout_width="0dp"
         android:layout_height="32dp"
         android:layout_marginTop="8dp"
+        android:entries="@array/vehicles_type"
         android:spinnerMode="dialog"
-        app:layout_constraintEnd_toEndOf="@+id/editTextNumber2"
+        app:layout_constraintEnd_toEndOf="@+id/editFinalMileage"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
