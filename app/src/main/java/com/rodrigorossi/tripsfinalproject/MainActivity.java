@@ -34,16 +34,13 @@ import java.util.Comparator;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewTrips;
-    private RecyclerView.LayoutManager layoutManager;
     private TripAdapter tripAdapter;
     private ArrayList<Trip> trips = new ArrayList<>();
     private Trip tripSelected;
     private int positionSelected;
-    private boolean isRefundIconVisible;
     private boolean isOrderAlphabetically;
 
     private static final String FILE = "com.rodrigorossi.tripsfinalproject.MAIN_PREFERENCES";
-    private static final String PREF_SHOW_REFUND_ICON = "PREF_SHOW_REFUND_ICON";
     private static final String PREF_ORDER_ALPHABETICALLY = "PREF_ORDER_ALPHABETICALLY";
 
     @Override
@@ -52,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerViewTrips = findViewById(R.id.recyclerViewTrips);
-        layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerViewTrips.setLayoutManager(layoutManager);
         recyclerViewTrips.setHasFixedSize(true);
         recyclerViewTrips.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
@@ -95,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.menuContextEdit:
-                    startActivityTrip(menuItem, ActivityOpenMode.UPDATE);
+                    startActivityTrip(ActivityOpenMode.UPDATE);
                     actionMode.finish();
                     return true;
                 case R.id.menuContextDelete:
@@ -122,10 +119,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menuItemAbout:
-                startActivityAbout(item);
+                startActivityAbout();
                 return true;
             case R.id.menuItemNew:
-                startActivityTrip(item, ActivityOpenMode.NEW);
+                startActivityTrip(ActivityOpenMode.NEW);
                 return true;
             case R.id.menuItemOrderAlphabetically:
                 isOrderAlphabetically = !isOrderAlphabetically;
@@ -137,11 +134,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Método usado para marcar os itens de menu conforme as preferencias do usuário
-     * @param menu
-     * @return
-     */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         readPreferences();
@@ -155,20 +147,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            Bundle bundle = data.getExtras();
+            Bundle bundle;
 
-            tripSelected.setDestiny(bundle.getString(TripActivity.KEY_DESTINY));
-            tripSelected.setInitialMileage(bundle.getInt(TripActivity.KEY_INITIAL_MILEAGE));
-            tripSelected.setFinalMileage(bundle.getInt(TripActivity.KEY_FINAL_MILEAGE));
-            tripSelected.setTripType(bundle.getInt(TripActivity.KEY_TRIP_TYPE));
-            tripSelected.setVehicle(bundle.getInt(TripActivity.KEY_VEHICLE_TYPE));
-            tripSelected.setRefund(bundle.getBoolean(TripActivity.KEY_REFUND));
+            if (data != null) {
+                bundle = data.getExtras();
+                if (bundle != null) {
+                    tripSelected.setDestiny(bundle.getString(TripActivity.KEY_DESTINY));
+                    tripSelected.setInitialMileage(bundle.getInt(TripActivity.KEY_INITIAL_MILEAGE));
+                    tripSelected.setFinalMileage(bundle.getInt(TripActivity.KEY_FINAL_MILEAGE));
+                    tripSelected.setTripType(bundle.getInt(TripActivity.KEY_TRIP_TYPE));
+                    tripSelected.setVehicle(bundle.getInt(TripActivity.KEY_VEHICLE_TYPE));
+                    tripSelected.setRefund(bundle.getBoolean(TripActivity.KEY_REFUND));
 
-            if (requestCode == ActivityOpenMode.NEW.getCode()) {
-                tripSelected.setId(bundle.getInt(TripActivity.KEY_ID));
-                addNewItem(tripSelected);
-            } else {
-                updateExistingItem();
+                    if (requestCode == ActivityOpenMode.NEW.getCode()) {
+                        tripSelected.setId(bundle.getInt(TripActivity.KEY_ID));
+                        addNewItem(tripSelected);
+                    } else {
+                        updateExistingItem();
+                    }
+                }
             }
         }
 
@@ -187,11 +184,10 @@ public class MainActivity extends AppCompatActivity {
 
         editor.putBoolean(PREF_ORDER_ALPHABETICALLY, isOrderAlphabetically);
 
-        editor.commit();
+        editor.apply();
     }
 
     private void orderListAlphabetically(boolean isOrderAlphabetically) {
-        // TODO implementar este método
         if (isOrderAlphabetically) {
             Collections.sort(trips, new Comparator<Trip>() {
                 @Override
@@ -210,12 +206,12 @@ public class MainActivity extends AppCompatActivity {
         tripAdapter.notifyDataSetChanged();
     }
 
-    private void startActivityAbout(MenuItem item) {
+    private void startActivityAbout() {
         Intent intent = new Intent(this, AboutActivity.class);
         startActivity(intent);
     }
 
-    private void startActivityTrip(MenuItem item, ActivityOpenMode openMode) {
+    private void startActivityTrip(ActivityOpenMode openMode) {
         Intent intent = new Intent(this, TripActivity.class);
         intent.putExtra("MODE", openMode);
         intent.putExtra(TripActivity.KEY_ID, trips.get(positionSelected).getId());
