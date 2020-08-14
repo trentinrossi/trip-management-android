@@ -55,17 +55,20 @@ public class TripActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        ActivityOpenMode mode = (ActivityOpenMode) bundle.getSerializable("MODE");
-
-        switch (mode) {
-            case NEW:
-                startForNew();
-                break;
-            case UPDATE:
-                startForUpdate(bundle);
-                break;
-            default:
-                break;
+        if (bundle != null) {
+            ActivityOpenMode mode = (ActivityOpenMode) bundle.getSerializable("MODE");
+            if (mode != null) {
+                switch (mode) {
+                    case NEW:
+                        startForNew();
+                        break;
+                    case UPDATE:
+                        startForUpdate(bundle);
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 
@@ -77,13 +80,11 @@ public class TripActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menuItem_trip_save:
-                save();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.menuItem_trip_save) {
+            save();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void startForNew() {

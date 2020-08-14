@@ -18,7 +18,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.MyViewHolder> 
 
     private List<Trip> tripList;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
+    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         TextView textViewTrip;
         View icon;
         public MyViewHolder(@NonNull View itemView) {
