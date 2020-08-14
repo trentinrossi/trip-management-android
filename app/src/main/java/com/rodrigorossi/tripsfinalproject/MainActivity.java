@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -35,6 +37,12 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Trip> trips = new ArrayList<>();
     private Trip tripSelected;
     private int positionSelected;
+    private boolean isRefundIconVisible;
+    private boolean isOrderAlphabetically;
+
+    private static final String FILE = "com.rodrigorossi.tripsfinalproject.MAIN_PREFERENCES";
+    private static final String PREF_SHOW_REFUND_ICON = "PREF_SHOW_REFUND_ICON";
+    private static final String PREF_ORDER_ALPHABETICALLY = "PREF_ORDER_ALPHABETICALLY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewTrips.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
 
         createFakeTripsList();
+        readPreferences();
 
         recyclerViewTrips.addOnItemTouchListener(
                 new RecyclerItemClickListener(getApplicationContext(), recyclerViewTrips, new RecyclerItemClickListener.OnItemClickListener() {
@@ -116,9 +125,35 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menuItemNew:
                 startActivityTrip(item, ActivityOpenMode.NEW);
                 return true;
+            case R.id.menuItemRefundIcon:
+                isRefundIconVisible = !isRefundIconVisible;
+                writePreferences();
+                return true;
+            case R.id.menuItemOrderAlphabetically:
+                isOrderAlphabetically = !isOrderAlphabetically;
+                writePreferences();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * Método usado para marcar os itens de menu conforme as preferencias do usuário
+     * @param menu
+     * @return
+     */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        readPreferences();
+
+        MenuItem itemIcon = menu.findItem(R.id.menuItemRefundIcon);
+        itemIcon.setChecked(isRefundIconVisible);
+
+        MenuItem itemOrder = menu.findItem(R.id.menuItemOrderAlphabetically);
+        itemOrder.setChecked(isOrderAlphabetically);
+
+        return true;
     }
 
     @Override
@@ -142,6 +177,34 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void readPreferences() {
+        SharedPreferences shared = getSharedPreferences(FILE, Context.MODE_PRIVATE);
+
+        isRefundIconVisible = shared.getBoolean(PREF_SHOW_REFUND_ICON, isRefundIconVisible);
+        isOrderAlphabetically = shared.getBoolean(PREF_ORDER_ALPHABETICALLY, isOrderAlphabetically);
+
+        changeRefundIconVisibility(isRefundIconVisible);
+        orderListAlphabetically(isOrderAlphabetically);
+    }
+
+    private void writePreferences() {
+        SharedPreferences shared = getSharedPreferences(FILE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+
+        editor.putBoolean(PREF_SHOW_REFUND_ICON, isRefundIconVisible);
+        editor.putBoolean(PREF_ORDER_ALPHABETICALLY, isOrderAlphabetically);
+
+        editor.commit();
+    }
+
+    private void changeRefundIconVisibility(boolean isVisible) {
+        // TODO implementar este método
+    }
+
+    private void orderListAlphabetically(boolean isOrderAlphabetically) {
+        // TODO implementar este método
     }
 
     private void startActivityAbout(MenuItem item) {
