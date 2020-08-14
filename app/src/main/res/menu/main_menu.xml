@@ -16,12 +16,6 @@
         android:id="@+id/groupShowRefundIcon"
         android:checkableBehavior="all">
         <item
-            android:id="@+id/menuItemRefundIcon"
-            android:checkable="true"
-            android:icon="@android:drawable/ic_menu_view"
-            android:title="@string/lblShowRefundIcon"
-            app:showAsAction="ifRoom" />
-        <item
             android:id="@+id/menuItemOrderAlphabetically"
             android:checkable="true"
             android:icon="@android:drawable/ic_menu_sort_alphabetically"

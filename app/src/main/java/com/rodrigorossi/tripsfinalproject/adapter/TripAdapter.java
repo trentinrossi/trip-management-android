@@ -20,9 +20,11 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.MyViewHolder> 
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         TextView textViewTrip;
+        View icon;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewTrip  = itemView.findViewById(R.id.textViewTrip);
+            icon = itemView.findViewById(R.id.imageRefund);
             itemView.setOnCreateContextMenuListener(this);
         }
 
@@ -47,6 +49,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.MyViewHolder> 
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Trip t = tripList.get(position);
         holder.textViewTrip.setText(t.getDestiny());
+        holder.icon.setVisibility(t.isRefund() ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override

@@ -28,6 +28,8 @@ import com.rodrigorossi.tripsfinalproject.model.Trip;
 import com.rodrigorossi.tripsfinalproject.util.RecyclerItemClickListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -125,12 +127,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menuItemNew:
                 startActivityTrip(item, ActivityOpenMode.NEW);
                 return true;
-            case R.id.menuItemRefundIcon:
-                isRefundIconVisible = !isRefundIconVisible;
-                writePreferences();
-                return true;
             case R.id.menuItemOrderAlphabetically:
                 isOrderAlphabetically = !isOrderAlphabetically;
+                orderListAlphabetically(isOrderAlphabetically);
                 writePreferences();
                 return true;
             default:
@@ -146,9 +145,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         readPreferences();
-
-        MenuItem itemIcon = menu.findItem(R.id.menuItemRefundIcon);
-        itemIcon.setChecked(isRefundIconVisible);
 
         MenuItem itemOrder = menu.findItem(R.id.menuItemOrderAlphabetically);
         itemOrder.setChecked(isOrderAlphabetically);
@@ -181,11 +177,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void readPreferences() {
         SharedPreferences shared = getSharedPreferences(FILE, Context.MODE_PRIVATE);
-
-        isRefundIconVisible = shared.getBoolean(PREF_SHOW_REFUND_ICON, isRefundIconVisible);
         isOrderAlphabetically = shared.getBoolean(PREF_ORDER_ALPHABETICALLY, isOrderAlphabetically);
-
-        changeRefundIconVisibility(isRefundIconVisible);
         orderListAlphabetically(isOrderAlphabetically);
     }
 
@@ -193,18 +185,29 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences shared = getSharedPreferences(FILE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
 
-        editor.putBoolean(PREF_SHOW_REFUND_ICON, isRefundIconVisible);
         editor.putBoolean(PREF_ORDER_ALPHABETICALLY, isOrderAlphabetically);
 
         editor.commit();
     }
 
-    private void changeRefundIconVisibility(boolean isVisible) {
-        // TODO implementar este método
-    }
-
     private void orderListAlphabetically(boolean isOrderAlphabetically) {
         // TODO implementar este método
+        if (isOrderAlphabetically) {
+            Collections.sort(trips, new Comparator<Trip>() {
+                @Override
+                public int compare(Trip trip, Trip t1) {
+                    return trip.getDestiny().compareToIgnoreCase(t1.getDestiny());
+                }
+            });
+        } else {
+            Collections.sort(trips, new Comparator<Trip>() {
+                @Override
+                public int compare(Trip trip, Trip t1) {
+                    return trip.getId() - t1.getId();
+                }
+            });
+        }
+        tripAdapter.notifyDataSetChanged();
     }
 
     private void startActivityAbout(MenuItem item) {
