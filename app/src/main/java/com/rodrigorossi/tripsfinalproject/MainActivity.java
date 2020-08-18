@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.rodrigorossi.tripsfinalproject.adapter.TripAdapter;
+import com.rodrigorossi.tripsfinalproject.database.TripDatabase;
 import com.rodrigorossi.tripsfinalproject.model.ActivityOpenMode;
 import com.rodrigorossi.tripsfinalproject.model.Trip;
 import com.rodrigorossi.tripsfinalproject.util.RecyclerItemClickListener;
@@ -30,12 +31,13 @@ import com.rodrigorossi.tripsfinalproject.util.RecyclerItemClickListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewTrips;
     private TripAdapter tripAdapter;
-    private ArrayList<Trip> trips = new ArrayList<>();
+    private List<Trip> trips = new ArrayList<>();
     private Trip tripSelected;
     private int positionSelected;
     private boolean isOrderAlphabetically;
@@ -54,7 +56,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewTrips.setHasFixedSize(true);
         recyclerViewTrips.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
 
-        createFakeTripsList();
+        loadTripsFromDatabase();
+//        createFakeTripsList();
         readPreferences();
 
         recyclerViewTrips.addOnItemTouchListener(
@@ -63,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onItemClick(View view, int position) {
                         tripSelected = trips.get(position);
                         positionSelected = position;
-                        Toast.makeText(getApplicationContext(), tripSelected.getDestiny(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), tripSelected.getId(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -152,6 +155,8 @@ public class MainActivity extends AppCompatActivity {
             if (data != null) {
                 bundle = data.getExtras();
                 if (bundle != null) {
+                    tripSelected = new Trip();
+                    tripSelected.setId(bundle.getInt(TripActivity.KEY_ID));
                     tripSelected.setDestiny(bundle.getString(TripActivity.KEY_DESTINY));
                     tripSelected.setInitialMileage(bundle.getInt(TripActivity.KEY_INITIAL_MILEAGE));
                     tripSelected.setFinalMileage(bundle.getInt(TripActivity.KEY_FINAL_MILEAGE));
@@ -160,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
                     tripSelected.setRefund(bundle.getBoolean(TripActivity.KEY_REFUND));
 
                     if (requestCode == ActivityOpenMode.NEW.getCode()) {
-                        tripSelected.setId(bundle.getInt(TripActivity.KEY_ID));
                         addNewItem(tripSelected);
                     } else {
                         updateExistingItem();
@@ -214,13 +218,28 @@ public class MainActivity extends AppCompatActivity {
     private void startActivityTrip(ActivityOpenMode openMode) {
         Intent intent = new Intent(this, TripActivity.class);
         intent.putExtra("MODE", openMode);
-        intent.putExtra(TripActivity.KEY_ID, trips.get(positionSelected).getId());
-        intent.putExtra(TripActivity.KEY_DESTINY, trips.get(positionSelected).getDestiny());
-        intent.putExtra(TripActivity.KEY_INITIAL_MILEAGE, trips.get(positionSelected).getInitialMileage());
-        intent.putExtra(TripActivity.KEY_FINAL_MILEAGE, trips.get(positionSelected).getFinalMileage());
-        intent.putExtra(TripActivity.KEY_TRIP_TYPE, trips.get(positionSelected).getTripType());
-        intent.putExtra(TripActivity.KEY_VEHICLE_TYPE, trips.get(positionSelected).getVehicle());
-        intent.putExtra(TripActivity.KEY_REFUND, trips.get(positionSelected).isRefund());
+
+        if (openMode == ActivityOpenMode.UPDATE) {
+            // Ideal seria pegar os dados que estão na Lista, mas conforme pede o projeto, deve pesquisar pelo menos uma entidade/tabela
+//            intent.putExtra(TripActivity.KEY_ID, trips.get(positionSelected).getId());
+//            intent.putExtra(TripActivity.KEY_DESTINY, trips.get(positionSelected).getDestiny());
+//            intent.putExtra(TripActivity.KEY_INITIAL_MILEAGE, trips.get(positionSelected).getInitialMileage());
+//            intent.putExtra(TripActivity.KEY_FINAL_MILEAGE, trips.get(positionSelected).getFinalMileage());
+//            intent.putExtra(TripActivity.KEY_TRIP_TYPE, trips.get(positionSelected).getTripType());
+//            intent.putExtra(TripActivity.KEY_VEHICLE_TYPE, trips.get(positionSelected).getVehicle());
+//            intent.putExtra(TripActivity.KEY_REFUND, trips.get(positionSelected).isRefund());
+
+            tripSelected = TripDatabase.getDatabase(this).tripDao().findById(trips.get(positionSelected).getId());
+            intent.putExtra(TripActivity.KEY_ID, tripSelected.getId());
+            intent.putExtra(TripActivity.KEY_DESTINY, tripSelected.getDestiny());
+            intent.putExtra(TripActivity.KEY_INITIAL_MILEAGE, tripSelected.getInitialMileage());
+            intent.putExtra(TripActivity.KEY_FINAL_MILEAGE, tripSelected.getFinalMileage());
+            intent.putExtra(TripActivity.KEY_TRIP_TYPE, tripSelected.getTripType());
+            intent.putExtra(TripActivity.KEY_VEHICLE_TYPE, tripSelected.getVehicle());
+            intent.putExtra(TripActivity.KEY_REFUND, tripSelected.isRefund());
+        }
+
+        System.out.println(tripSelected);
         startActivityForResult(intent, openMode.getCode());
     }
 
@@ -240,20 +259,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deleteItem() {
+        TripDatabase.getDatabase(this).tripDao().delete(tripSelected);
         trips.remove(positionSelected);
-//        recyclerViewTrips.removeViewAt(positionSelected);
         tripAdapter.notifyDataSetChanged();
     }
 
     private void addNewItem(Trip trip) {
+        int id = (int) TripDatabase.getDatabase(this).tripDao().insert(trip);
+        trip.setId(id);
         trips.add(trip);
         tripAdapter.notifyDataSetChanged();
     }
 
     private void updateExistingItem() {
+        TripDatabase.getDatabase(this).tripDao().update(tripSelected);
         trips.remove(positionSelected);
         trips.add(positionSelected, tripSelected);
         tripAdapter.notifyDataSetChanged();
+    }
+
+    private void loadTripsFromDatabase() {
+        trips = TripDatabase.getDatabase(this).tripDao().findAll();
+        tripAdapter = new TripAdapter(trips);
+        recyclerViewTrips.setAdapter(tripAdapter);
     }
 
     private void createFakeTripsList() {

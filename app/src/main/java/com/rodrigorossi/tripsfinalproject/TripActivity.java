@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.rodrigorossi.tripsfinalproject.model.ActivityOpenMode;
 import com.rodrigorossi.tripsfinalproject.model.Trip;
@@ -111,20 +112,30 @@ public class TripActivity extends AppCompatActivity {
     }
 
     private void save() {
-        if (trip.getId() == 0) {
-            // TODO quando implementar o BD pegar o primeiro ID disponível (auto-incremento)
-            trip.setId(new Random().nextInt());
+        if (editDestiny.getText().toString().trim().length() == 0) {
+            Toast.makeText(this, R.string.lblDestinyMandatory,Toast.LENGTH_LONG).show();
+            editDestiny.requestFocus();
+        } else {
+            trip.setDestiny(editDestiny.getText().toString());
+            if (editInitialMileage.getText().toString().trim().length() == 0) {
+                trip.setInitialMileage(0);
+            } else {
+                trip.setInitialMileage(Integer.parseInt(editInitialMileage.getText().toString()));
+            }
+
+            if (editFinalMileage.getText().toString().trim().length() == 0) {
+                trip.setFinalMileage(0);
+            } else {
+                trip.setFinalMileage(Integer.parseInt(editFinalMileage.getText().toString()));
+            }
+
+            trip.setTripType(radioTripType.getCheckedRadioButtonId());
+            trip.setVehicle(spinnerVehicleType.getSelectedItemPosition());
+            trip.setRefund(switchRefund.isChecked());
+
+            setResult(Activity.RESULT_OK, setExtraBundles());
+            finish();
         }
-
-        trip.setDestiny(editDestiny.getText().toString());
-        trip.setInitialMileage(Integer.parseInt(editInitialMileage.getText().toString()));
-        trip.setFinalMileage(Integer.parseInt(editFinalMileage.getText().toString()));
-        trip.setTripType(radioTripType.getCheckedRadioButtonId());
-        trip.setVehicle(spinnerVehicleType.getSelectedItemPosition());
-        trip.setRefund(switchRefund.isChecked());
-
-        setResult(Activity.RESULT_OK, setExtraBundles());
-        finish();
     }
 
     @Override

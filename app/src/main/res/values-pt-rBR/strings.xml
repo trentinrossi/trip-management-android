@@ -28,6 +28,7 @@
     <string name="lblUpdateTrip">Atualizar Viagem</string>
     <string name="lblRental">Alugado</string>
     <string name="lblBorrowed">Emprestado</string>
-    <string name="lblShowRefundIcon">Refund Icon</string>
-    <string name="lblOrderAlphabetically">Order</string>
+    <string name="lblShowRefundIcon">Icone reembolso</string>
+    <string name="lblOrderAlphabetically">Ordenar</string>
+    <string name="lblDestinyMandatory">Destiny is mandatory</string>
 </resources>

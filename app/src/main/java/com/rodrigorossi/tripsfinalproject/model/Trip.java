@@ -1,11 +1,17 @@
 package com.rodrigorossi.tripsfinalproject.model;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.util.Objects;
 
 /**
  * Representa a classe de entidade para o cadastro de viagens
  */
+@Entity
 public class Trip {
+
+    @PrimaryKey(autoGenerate = true)
     private int id;
     private String destiny;
     private int initialMileage;
